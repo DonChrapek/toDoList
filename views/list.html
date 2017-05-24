@@ -1,0 +1,10 @@
+<div class="col-xs-12">
+    <a href="#/addTask" class="btn btn-primary btn-lg btn-block">
+        <span class="glyphicon glyphicon-plus"></span> Add task
+    </a>
+    <ul class="list-group">
+        <li ng-repeat="task in tasks" class="list-group-item text-center clearfix">
+            <span class="bolded"> {{task.taskName}} </span>
+        </li>
+    </ul>
+</div>

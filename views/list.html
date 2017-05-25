@@ -3,7 +3,7 @@
         <span class="glyphicon glyphicon-plus"></span> Add task
     </a>
     <ul class="list-group">
-        <li ng-repeat="task in tasks" class="list-group-item text-center clearfix">
+        <li ng-repeat="task in tasks | orderBy: 'date'" class="list-group-item text-center clearfix">
             <span class="bolded"> {{task.taskName}} </span>
         </li>
     </ul>

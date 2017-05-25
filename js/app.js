@@ -27,7 +27,19 @@ app.service('ToDoService', function() {
         { id: 3, completed: true, taskName: 'Learn RESTful API', date: '2017-05-24' }
     ];
     
+    toDoService.getNewId = function() {
+        if (toDoService.newId) {
+            toDoService.newId++;
+            return toDoService.newId;
+        } else {
+            var maxId = _.max(toDoService.tasks, function(entry) { return entry.id });
+            toDoService.newId = maxId.id + 1;
+            return toDoService.newId;
+        }
+    };
+    
     toDoService.save = function(entry) {
+        entry.id = toDoService.getNewId();
         toDoService.tasks.push(entry);
     };
     
@@ -49,5 +61,7 @@ app.controller('ListController', ['$scope', '$location', 'ToDoService', function
         ToDoService.save($scope.task);
         $location.path('/');
     };
+    
+    console.log($scope.tasks);
     
 }]);

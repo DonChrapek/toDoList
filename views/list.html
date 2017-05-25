@@ -1,10 +1,14 @@
 <div class="col-xs-12">
     <a href="#/addTask" class="btn btn-primary btn-lg btn-block">
-        <span class="glyphicon glyphicon-plus"></span> Add task
+        <span class="glyphicon glyphicon-plus"></span> 
+        Add task
     </a>
     <ul class="list-group">
-        <li ng-repeat="task in tasks | orderBy: 'date'" class="list-group-item text-center clearfix">
+        <li ng-repeat="task in tasks  track by $index | orderBy: 'date'" class="list-group-item text-center clearfix">
             <span class="bolded"> {{task.taskName}} </span>
+            <a href="#/addTask/edit/{{task.id}}" class="btn button-sm button-default pull-right">
+                <span class="glyphicon glyphicon-pencil"></span>
+            </a>
         </li>
     </ul>
 </div>

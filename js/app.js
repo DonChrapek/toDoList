@@ -5,9 +5,13 @@ app.config(function($routeProvider){
     $routeProvider
     .when('/',{
         templateUrl: 'views/list.html',
-        controller: 'ListController'
+        controller: 'HomeController'
     })
     .when('/addTask', {
+        templateUrl: 'views/addtask.html',
+        controller: 'ListController'
+    })
+    .when('/addTask/edit/:id', {
         templateUrl: 'views/addtask.html',
         controller: 'ListController'
     })
@@ -27,6 +31,14 @@ app.service('ToDoService', function() {
         { id: 3, completed: true, taskName: 'Learn RESTful API', date: '2017-05-24' }
     ];
     
+    toDoService.findById = function(id) {
+        for (var t in toDoService.tasks) {
+            if (toDoService.tasks[t].id === id) {
+                return toDoService.tasks[t];
+            };
+        };
+    };
+    
     toDoService.getNewId = function() {
         if (toDoService.newId) {
             toDoService.newId++;
@@ -39,8 +51,17 @@ app.service('ToDoService', function() {
     };
     
     toDoService.save = function(entry) {
-        entry.id = toDoService.getNewId();
-        toDoService.tasks.push(entry);
+        
+        var updatedTask = toDoService.findById(entry.id);
+        
+        if (updatedTask) {
+            updatedTask.completed = entry.completed;
+            updatedTask.taskName = entry.taskName;
+            updatedTask.date = entry.date;
+        } else {
+            entry.id = toDoService.getNewId();
+            toDoService.tasks.push(entry);
+        }
     };
     
     return toDoService;
@@ -48,20 +69,22 @@ app.service('ToDoService', function() {
 });
 
 
-app.controller('HomeController', ['$scope', function($scope){
-    $scope.appTitle = 'To do list';
+app.controller('HomeController', ['$scope', 'ToDoService', function($scope, ToDoService){
+    $scope.tasks = ToDoService.tasks;
 }]);
 
-app.controller('ListController', ['$scope', '$location', 'ToDoService', function($scope, $location, ToDoService ){
-    $scope.tasks = ToDoService.tasks;
+
+app.controller('ListController', ['$scope', '$routeParams', '$location', 'ToDoService', function($scope, $routeParams, $location, ToDoService){    
     
-    $scope.task = {};
+    if(!$routeParams.id) {
+        $scope.task = {id: 0, completed: false, taskName: '', date: new Date() };
+    } else {
+        $scope.task = _.clone(ToDoService.findById(parseInt($routeParams.id)));
+    }
     
     $scope.save = function() {
         ToDoService.save($scope.task);
         $location.path('/');
     };
-    
-    console.log($scope.tasks);
     
 }]);
